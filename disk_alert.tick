@@ -1,0 +1,14 @@
+// Параметры настройки
+var crit_threshold = 10.0 // Критический порог в процентах
+
+// Поток данных с Telegraf
+stream
+    |from()
+        .measurement('disk')
+        .where(lambda: "path" == '/')
+    |eval(lambda: 100.0 * "free" / "total")
+        .as('free_percent')
+    |alert()
+        .crit(lambda: "free_percent" < crit_threshold)
+        .message('Внимание! Свободное место на разделе "/" опустилось ниже 10%')
+        .telegram()

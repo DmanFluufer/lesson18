@@ -1,0 +1,7 @@
+stream
+ |from()
+   .measurement('postgresql')
+ |alert()
+   .crit(lambda: "active_time" < 10)
+   .message('PostgreSQL has been restarted')
+   .telegram()

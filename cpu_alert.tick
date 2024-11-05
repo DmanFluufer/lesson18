@@ -1,0 +1,11 @@
+var crit_threshold = 90.0
+
+stream
+    |from()
+        .measurement('cpu')
+    |eval(lambda: 100.0 - "usage_idle" - "usage_iowait")
+        .as('utilization')
+    |alert()
+        .crit(lambda: "utilization" > crit_threshold)
+        .message('CPI usage is too high!')
+        .telegram()
